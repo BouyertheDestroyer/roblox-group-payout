@@ -14,8 +14,10 @@ Example failure: you start a run for 400 recipients, 160 payouts succeed, then t
 
 ## Install
 
+Not published on npm. Install from GitHub:
+
 ```bash
-npm install roblox-group-payout
+npm install BouyertheDestroyer/roblox-group-payout
 ```
 
 ## CLI Usage
