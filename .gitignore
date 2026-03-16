@@ -1,0 +1,9 @@
+# Credentials
+rb-cookie.txt
+rb-cookie.enc
+totp-config.json
+payout-auth-config.json
+totp-config.enc
+
+# Node
+node_modules/

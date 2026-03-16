@@ -1,0 +1,34 @@
+{
+  "name": "roblox-group-payout",
+  "version": "1.0.0",
+  "description": "Reliably execute Roblox group payouts. Handles cookie rotation, CSRF tokens, two-step verification, eligibility checks, and batching.",
+  "main": "index.js",
+  "bin": {
+    "roblox-group-payout": "cli.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "roblox",
+    "group",
+    "payout",
+    "robux",
+    "creator-economy"
+  ],
+  "author": "BouyertheDestroyer <bouyerthedestroyer@protonmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js",
+    "roblox-api.js",
+    "cli.js",
+    "cookie-store.js",
+    "totp.js",
+    "README.md",
+    "ARCHITECTURE.md",
+    "LICENSE"
+  ]
+}
