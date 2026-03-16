@@ -7,3 +7,7 @@ totp-config.enc
 
 # Node
 node_modules/
+
+# Test temp files
+test-cookie-temp.txt
+test-config-temp.json

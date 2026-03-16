@@ -27,7 +27,8 @@ Helpers (optional convenience for local/CLI usage):
 
 - `cookie-store.js` - `.ROBLOSECURITY` cookie file storage
 - `totp.js` - payout auth config storage + TOTP generation
-- `cli.js` - interactive setup/pay flow using helper modules
+- `cli.js` - interactive setup and 2SV code generation (no pay-from-CLI)
+- `example-pay-50-members-one-robux.js` - sample script to run a small test payout (50 group members, 1 R$ each)
 
 The core accepts plain values (cookie string, TOTP secret string). It does not read or write files directly.
 

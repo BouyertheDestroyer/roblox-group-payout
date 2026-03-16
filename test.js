@@ -118,7 +118,7 @@ console.log('\nInput validation tests (core)...\n');
 const VALID_OPTS = {
 	cookie: 'fake-cookie',
 	groupId: 1,
-	userId: 1,
+	payerUserId: 1,
 	totpSecret: 'JBSWY3DPEHPK3PXP',
 	balances: {},
 };
@@ -147,14 +147,14 @@ test('payBalances rejects missing groupId', async () => {
 	}
 });
 
-test('payBalances rejects missing userId', async () => {
+test('payBalances rejects missing payerUserId', async () => {
 	const { payBalances } = require('./index');
 	try {
-		await payBalances({ ...VALID_OPTS, userId: undefined });
+		await payBalances({ ...VALID_OPTS, payerUserId: undefined });
 		throw new Error('Should have thrown');
 	} catch (error) {
-		if (!error.message.includes('userId')) {
-			throw new Error(`Expected userId error, got: ${error.message}`);
+		if (!error.message.includes('payerUserId')) {
+			throw new Error(`Expected payerUserId error, got: ${error.message}`);
 		}
 	}
 });

@@ -14,15 +14,15 @@ Example failure: you start a run for 400 recipients, 160 payouts succeed, then t
 
 ## Install
 
-Not published on npm. Install from GitHub:
+Not published on npm. Install from GitHub (Node 18+):
 
 ```bash
 npm install BouyertheDestroyer/roblox-group-payout
 ```
 
-## CLI Usage
+## CLI
 
-The CLI uses the helper modules for credential storage.
+The CLI is for **credential setup and 2SV codes only**. It does not run payouts. Payouts are done by your code calling the library (or by running the example script to try a small test).
 
 ### Setup (one-time)
 
@@ -30,30 +30,25 @@ The CLI uses the helper modules for credential storage.
 npx roblox-group-payout setup
 ```
 
-#### Paying account setup (alt recommended)
+Paying account setup (alt recommended): enable 2-Step Verification, join the payout group, grant **Spend Group Funds**. The setup stores cookie and config (groupId, payer user ID, TOTP secret) in the library directory.
 
-1. Enable 2-Step Verification and paste the authenticator setup code into the setup CLI.
-2. Join the payout group.
-3. Grant **Spend Group Funds** permission.
-
-The setup command will store credentials in plain-text files in the library directory.
-
-### Pay balances
+### Generate 2SV code
 
 ```bash
-npx roblox-group-payout pay --balances balances.json
+npx roblox-group-payout code
 ```
 
-The `balances.json` file:
+Prints the current 6-digit 2SV code (e.g. for manual login). The library uses the stored TOTP secret for automatic 2SV during payouts.
 
-```json
-{
-  "111": 500,
-  "222": 300
-}
+### Example: small test payout
+
+To see the library run a real payout before integrating into your app:
+
+```bash
+node example-pay-50-members-one-robux.js
 ```
 
-After execution, the file is updated in-place with remaining balances. Re-run the same command to retry any unpaid balances.
+This pays the first 50 members of your group 1 Robux each (requires `setup` to be done). Use it to verify credentials and debug issues on a small run.
 
 ## Library Usage
 
@@ -63,7 +58,7 @@ const { payBalances } = require('roblox-group-payout');
 const result = await payBalances({
   cookie: process.env.ROBLOSECURITY,
   groupId: 12345678,
-  userId: 99999,              // alt account with "Spend Group Funds" permission
+  payerUserId: 99999,         // alt account with "Spend Group Funds" permission
   totpSecret: 'JBSWY3DPEHPK3PXP',
   balances: {
     "111": 500,
@@ -83,13 +78,15 @@ console.log(`Ineligible: ${result.ineligible.length}`);
 // Persist remaining balances and re-run to retry unpaid users
 ```
 
+To load credentials from the same files as the CLI (cookie + config on disk), use `payBalancesFromConfig({ balances })` instead of `payBalances()`.
+
 ### Options
 
 | Option | Type | Required | Description |
 |--------|------|----------|-------------|
 | `cookie` | string | Yes | `.ROBLOSECURITY` cookie for the alt account |
 | `groupId` | number | Yes | Roblox group ID to pay from |
-| `userId` | number | Yes | Roblox user ID of the alt account initiating payouts |
+| `payerUserId` | number | Yes | Roblox user ID of the paying account (alt) initiating payouts |
 | `totpSecret` | string | Yes | Base32-encoded TOTP secret for automatic 2SV |
 | `balances` | object | Yes | Map of `{ userId: amount }` -- outstanding robux owed |
 | `onCookieRotated` | function | No | Called with new cookie string when Roblox rotates it |

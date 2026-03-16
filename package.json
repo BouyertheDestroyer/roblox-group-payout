@@ -7,7 +7,8 @@
     "roblox-group-payout": "cli.js"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "example": "node example-pay-50-members-one-robux.js"
   },
   "keywords": [
     "roblox",
@@ -27,6 +28,7 @@
     "cli.js",
     "cookie-store.js",
     "totp.js",
+    "example-pay-50-members-one-robux.js",
     "README.md",
     "ARCHITECTURE.md",
     "LICENSE"
