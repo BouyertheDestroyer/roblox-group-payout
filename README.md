@@ -20,9 +20,11 @@ Not published on npm. Install from GitHub (Node 18+):
 npm install BouyertheDestroyer/roblox-group-payout
 ```
 
-## CLI
+---
 
-The CLI is for **credential setup and 2SV codes only**. It does not run payouts. Payouts are done by your code calling the library (or by running the example script to try a small test).
+## Usage
+
+Run setup once, then call the library with your balances. Credentials (cookie, groupId, payer user ID, TOTP secret) are read from disk; cookie rotation is saved automatically.
 
 ### Setup (one-time)
 
@@ -30,9 +32,9 @@ The CLI is for **credential setup and 2SV codes only**. It does not run payouts.
 npx roblox-group-payout setup
 ```
 
-Paying account setup (alt recommended): enable 2-Step Verification, join the payout group, grant **Spend Group Funds**. The setup stores cookie and config (groupId, payer user ID, TOTP secret) in the library directory.
+Paying account setup (alt recommended): enable 2-Step Verification, join the payout group, grant **Spend Group Funds**. The CLI stores cookie and config in the library directory.
 
-### Generate 2SV code
+### Generate 2SV code (optional)
 
 ```bash
 npx roblox-group-payout code
@@ -40,67 +42,45 @@ npx roblox-group-payout code
 
 Prints the current 6-digit 2SV code (e.g. for manual login). The library uses the stored TOTP secret for automatic 2SV during payouts.
 
-### Example: small test payout
-
-To see the library run a real payout before integrating into your app:
+### Try a small test payout (optional)
 
 ```bash
 node example-pay-50-members-one-robux.js
 ```
 
-This pays up to 50 members of your group 1 Robux each (requires `setup` to be done). It asks for confirmation before executing. Use it to verify credentials and debug issues on a small run.
+Pays up to 50 group members 1 Robux each. Asks for confirmation before executing. Use it to verify credentials before integrating.
 
-## Library Usage
+### Call the library from your code
+
+```js
+const { payBalancesFromConfig } = require('roblox-group-payout');
+
+const result = await payBalancesFromConfig({
+  balances: { "111": 500, "222": 300, "333": 200 }, // userId (string) → robux (int)
+});
+
+// paid / failed / ineligible — same shape; persist non-paid and re-run to retry
+console.log(`Paid: ${result.paid.length}, Failed: ${result.failed.length}, Ineligible: ${result.ineligible.length}`);
+```
+
+Persist remaining balances (e.g. zero out `result.paid`, keep the rest) and re-run to retry unpaid users.
+
+---
+
+## Manage your own credentials
+
+Use this when you supply credentials yourself instead of the CLI config files.
 
 ```js
 const { payBalances } = require('roblox-group-payout');
 
 const result = await payBalances({
-  cookie: process.env.ROBLOSECURITY,
-  groupId: 12345678,
-  payerUserId: 99999,         // alt account with "Spend Group Funds" permission
-  totpSecret: 'JBSWY3DPEHPK3PXP',
-  balances: {
-    "111": 500,
-    "222": 300,
-    "333": 200,
-  },
-  onCookieRotated: (newCookie) => {
-    // Persist the new cookie however you want
-    saveToDatabase(newCookie);
-  },
+  cookie: "_|WARNING:-DO-NOT-SHARE-THIS--Roblox-Security-Cookie-...a1b2c3d4e5f6",     // string
+  groupId: 12345678,            // number
+  payerUserId: 99999,           // number
+  totpSecret: "JBSWY3DPEHPK3PXP", // string (Base32)
+  balances: { "111": 500, "222": 300, "333": 200 }, // userId (string) → robux (int)
+  onCookieRotated: (newCookie) => { /* persist newCookie for future runs */ },
 });
-
-console.log(`Paid: ${result.paid.length}`);
-console.log(`Failed: ${result.failed.length}`);
-console.log(`Ineligible: ${result.ineligible.length}`);
-
-// Persist remaining balances and re-run to retry unpaid users
+// result: { paid, failed, ineligible } — same shape as above
 ```
-
-To load credentials from the same files as the CLI (cookie + config on disk), use `payBalancesFromConfig({ balances })` instead of `payBalances()`.
-
-### Options
-
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `cookie` | string | Yes | `.ROBLOSECURITY` cookie for the alt account |
-| `groupId` | number | Yes | Roblox group ID to pay from |
-| `payerUserId` | number | Yes | Roblox user ID of the paying account (alt) initiating payouts |
-| `totpSecret` | string | Yes | Base32-encoded TOTP secret for automatic 2SV |
-| `balances` | object | Yes | Map of `{ userId: amount }` -- outstanding robux owed |
-| `onCookieRotated` | function | No | Called with new cookie string when Roblox rotates it |
-
-### Return Value
-
-```js
-{
-  paid: [],        // Payments that succeeded ({ recipientId, amount })
-  failed: [],      // Payments that were eligible but the API call failed
-  ineligible: [],  // Payments skipped (user not eligible for group payouts)
-}
-```
-
-## License
-
-MIT
