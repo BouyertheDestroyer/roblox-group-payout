@@ -1,6 +1,6 @@
 # roblox-group-payout
 
-Reliably pay outstanding Roblox group balances. This is used by [BIRD](https://bird.games) to pay 500+ creators 100k+ robux every week.
+Reliably pay outstanding Roblox group balances. This is used in [BIRD](https://bird.games) to pay 500+ UGC creators 100k+ robux every week.
 
 The balance-based model acknowledges that some payments will inevitably fail (ineligible users, API errors, rate limits). Instead of "pay these exact amounts", the contract is "here are outstanding balances, clear as many as you can". Persist the returned balances and re-run to retry.
 
