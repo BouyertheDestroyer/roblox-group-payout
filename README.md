@@ -26,11 +26,23 @@ npm install BouyertheDestroyer/roblox-group-payout
 
 Setup once (credentials stored on disk; cookie rotation saved automatically). Then call the library with your balances.
 
-**Setup:** `npx roblox-group-payout setup` — use an alt account, enable 2SV, join group, grant **Spend Group Funds**.
+**Setup** (one-time): use an alt account, enable 2SV, join group, grant **Spend Group Funds**.
 
-**2SV code:** `npx roblox-group-payout code` — prints current 6-digit code, in case you ever need it.
+```bash
+npx roblox-group-payout setup
+```
 
-**Test run:** `node example-pay-50-members-one-robux.js` — pays 50 group members 1 R$ each.
+**2SV code:** prints current 6-digit code, in case you ever need it.
+
+```bash
+npx roblox-group-payout code
+```
+
+**Test run:** pays 50 group members 1 R$ each.
+
+```bash
+node example-pay-50-members-one-robux.js
+```
 
 **From code:**
 
