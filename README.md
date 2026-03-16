@@ -48,7 +48,7 @@ To see the library run a real payout before integrating into your app:
 node example-pay-50-members-one-robux.js
 ```
 
-This pays the first 50 members of your group 1 Robux each (requires `setup` to be done). Use it to verify credentials and debug issues on a small run.
+This pays up to 50 members of your group 1 Robux each (requires `setup` to be done). It asks for confirmation before executing. Use it to verify credentials and debug issues on a small run.
 
 ## Library Usage
 
